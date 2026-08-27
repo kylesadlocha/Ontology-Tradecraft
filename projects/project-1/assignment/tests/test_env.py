@@ -14,3 +14,4 @@ def test_python_version():
     data = run()
     major = int(data["python"].split(".")[0])
     assert major >= 3
+    

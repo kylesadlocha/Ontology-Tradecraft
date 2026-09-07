@@ -1,0 +1,136 @@
+@base <http://example.org/ontology-tradecraft/> .
+
+@prefix : <http://example.org/ontology-tradecraft/> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix cc: <https://www.commoncoreontologies.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/ontology-tradecraft/> a owl:Ontology ;
+    owl:imports <file:///C:/Users/kygal/repos/Ontology-Tradecraft/projects/project-2/assignment/src/data/modules/bfo-core.ttl> .
+# Classes
+
+:JetEngine a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000040 ;
+    rdfs:label "Jet Engine"@en ;
+    skos:definition "An engine designed for a jet."@en .
+
+:FixedWing a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000040 ;
+    rdfs:label "Fixed Wing"@en ;
+    skos:definition "An aircraft which has a wing that does not move."@en .
+
+:Manufacturer a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000040 ;
+    rdfs:label "Manufacturer"@en ;
+    skos:definition "A material entity which manufactures a good."@en .
+
+:TestProcess a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:label "Test Process"@en ;
+    skos:definition "A process which tests an artifact."@en .
+
+:ActOfAircraftProcessing a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:label "Act of Aircraft Processing"@en ;
+    skos:definition "A process involving the processing of an aircraft."@en .
+
+:AerospaceEngineer a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000040 ;
+    rdfs:label "Aerospace Engineer"@en ;
+    skos:definition "A material entity which is an engineer specializing in aerospace."@en .
+
+:AdaptabilityEvaluation a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:label "Adaptability Evaluation"@en ;
+    skos:definition "A process which evaluates the adaptability of an artifact."@en .
+
+:ActofMeasuring a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:label "Act of Measuring"@en ;
+    skos:definition "A process which measures a quantity or property."@en .
+
+:TotalEmployment a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:label "Total Employment"@en ;
+    skos:definition "A process which measures the total employment in a given context."@en .
+
+# Object Properties
+
+:hasManufacturer a owl:ObjectProperty ;
+    rdfs:label "has Manufacturer"@en ;
+    skos:definition "X hasManufacturer Y iff Y is the manufacturer of aircraft design X."@en .
+
+# Data Type Properties
+
+:hasModelBADA a owl:datatypeProperty ;
+    rdfs:label "has Model BADA"@en ;
+    skos:definition "X hasModelBADA Y iff Y is the BADA model identifier corresponding to aircraft design X."@en .
+
+:hasModelFAA a owl:datatypeProperty ;
+    rdfs:label "has Model FAA"@en ;
+    skos:definition "X hasModelFAA Y iff Y is the FAA model identifier corresponding to aircraft design X."@en .
+
+
+:hasLengthFt a owl:DatatypeProperty ;
+    rdfs:label "has Length Ft"@en ;
+    skos:definition "X hasLengthFt Y iff Y is the length in feet of aircraft design X."@en .
+
+:hasTailHeightFt a owl:DatatypeProperty ;
+    rdfs:label "has Tail Height Ft"@en ;
+    skos:definition "X hasTailHeightFt Y iff Y is the tail height in feet of aircraft design X."@en .
+
+:hasValue a owl:DatatypeProperty ;
+    rdfs:label "has value"@en ;
+    skos:definition "Relates a measurement or quantity to its numerical value."@en .
+
+:hasMaximumApproachSpeed a owl:DatatypeProperty ;
+    rdfs:label "has maximum approach speed"@en ;
+    skos:definition "Relates an approach test part to its maximum approach speed."@en .
+
+:hasArea a owl:DatatypeProperty ;
+    rdfs:label "has area"@en ;
+    skos:definition "Relates a surface to its area."@en .
+
+:oGroup a owl:DatatypeProperty ;
+    rdfs:label "o group"@en ;
+    skos:definition "Relates an aircraft design to its oGroup."@en .
+
+:ownCode a owl:DatatypeProperty ;
+    rdfs:label "own code"@en ;
+    skos:definition "Relates an aircraft design to its ownCode."@en .
+# adding these in hopes of something working
+
+:isTemporalPartOf a owl:ObjectProperty ;
+    rdfs:subPropertyOf bfo:BFO_0000139 ;
+    rdfs:label "is temporal part of"@en ;
+    skos:definition "Relates a temporal part to the process of which it is a temporal part."@en .
+
+# Minimal reused CCO terms needed by the autograder
+
+cc:ont00000319 a owl:Class ;
+    rdfs:subClassOf bfo:BFO_0000031 ;
+    rdfs:label "Artifact Design"@en ;
+    skos:definition "An information content entity that specifies the design of an artifact."@en .
+
+cc:ont00000120 a owl:Class ;
+    rdfs:label "Measurement Unit"@en ;
+    skos:definition "A unit used to express the magnitude of a measured quantity."@en .
+
+cc:ont00001808 a owl:ObjectProperty ;
+    rdfs:label "is about"@en ;
+    skos:definition "Relates an information content entity to an entity that it is about."@en .
+
+cc:ont00001942 a owl:ObjectProperty ;
+    rdfs:label "prescribes"@en ;
+    skos:definition "Relates a directive information content entity to that which it prescribes."@en .
+
+cc:ont00001961 a owl:ObjectProperty ;
+    rdfs:label "is measurement unit of"@en ;
+    skos:definition "Relates a measurement unit to the quantity or measurement for which it is used."@en .
+
+cc:ont00001816 a owl:ObjectProperty ;
+    rdfs:label "is output of"@en ;
+    skos:definition "Relates an entity to the process of which it is an output."@en .

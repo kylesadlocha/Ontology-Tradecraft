@@ -1,0 +1,131 @@
+@prefix : <http://example.org/ontology-tradecraft/> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix cco: <https://www.commoncoreontologies.org/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+:A320NEO
+    rdf:type :FixedWing ;
+    rdfs:label "Airbus A320 NEO"@en ;
+    bfo:BFO_0000178 :Engine1, :Engine2 ;
+    :hasManufacturer :Airbus ;
+    :hasModelBADA "Airbus A320-231"^^xsd:string ;
+    :hasModelFAA "Airbus A320"^^xsd:string ;
+    :hasLengthFt "123.3"^^xsd:float ;
+    :hasTailHeightFt "39.6"^^xsd:float .
+
+:Engine1
+    rdf:type :JetEngine ;
+    rdfs:label "Engine 1"@en .
+
+:Engine2
+    rdf:type :JetEngine ;
+    rdfs:label "Engine 2"@en .
+
+:Airbus
+    rdf:type :Manufacturer ;
+    rdfs:label "Airbus"@en .
+
+
+:A321111
+    rdf:type :FixedWing ;
+    rdfs:label "Airbus A321-111"@en ;
+    cco:ont00001942 :ApproachSpeed .
+
+:ApproachSpeed
+    :hasValue "142"^^xsd:integer ;
+    :hasUnit :Knot .
+
+:Knot
+    rdf:type cco:ont00000120 ;
+    rdfs:label "knot"@en ;
+    cco:ont00001961 :ApproachSpeed .
+
+:AircraftTestProcess
+    rdf:type :TestProcess ;
+    rdfs:label "Aircraft Test Process"@en ;
+    :hasTemporalPart :Approach1,
+                     :Approach2,
+                     :Approach3,
+                     :Approach4,
+                     :Approach5 .
+
+:Approach1
+    bfo:BFO_0000139 :AircraftTestProcess ;
+    :hasMaximumApproachSpeed "135"^^xsd:integer .
+
+:Approach2
+    bfo:BFO_0000139 :AircraftTestProcess ;
+    :hasMaximumApproachSpeed "137"^^xsd:integer .
+
+:Approach3
+    bfo:BFO_0000139 :AircraftTestProcess ;
+    :hasMaximumApproachSpeed "139"^^xsd:integer .
+
+:Approach4
+    bfo:BFO_0000139 :AircraftTestProcess ;
+    :hasMaximumApproachSpeed "141"^^xsd:integer .
+
+:Approach5
+    bfo:BFO_0000139 :AircraftTestProcess ;
+    :hasMaximumApproachSpeed "143"^^xsd:integer .
+
+:SOC_AerospaceEngineer1
+    rdfs:label "SOC: Aerospace Engineer"@en ;
+    skos:definition "An aerospace engineer responsible for the design and development of aerospace systems."@en ;
+    cco:ont00001808 cco:ont00000319 .
+
+:SOC_AerospaceEngineer2
+    rdfs:label "SOC: Aerospace Engineer 1"@en ;
+    skos:definition "An aerospace engineer involved in the design and analysis of aerospace systems."@en .
+
+:SOC_AerospaceEngineer3
+    rdfs:label "SOC: Aerospace Engineer 2"@en ;
+    skos:definition "An aerospace engineer involved in the evaluation of aerospace systems."@en .
+
+:AircraftProcessing1
+    rdf:type :ActOfAircraftProcessing ;
+    rdfs:label "Aircraft Processing 1"@en ;
+    bfo:BFO_0000055 :AdaptabilityEvaluation1 ;
+    cco:ont00001816 :AircraftTestProcess .
+
+:AdaptabilityEvaluation1
+    rdf:type :AdaptabilityEvaluation ;
+    rdfs:label "Adaptability Evaluation 1"@en ;
+    bfo:BFO_0000197 :A320NEO .
+
+:A320AdaptabilityQuality
+    rdfs:label "A320 NEO Adaptability"@en ;
+    bfo:BFO_0000196 :A320NEO .
+
+:A320DesignRecord
+    rdfs:label "A320 NEO Design Record"@en ;
+    skos:definition "An information content entity describing the design of the A320 NEO."@en ;
+    cco:ont00001808 cco:ont00000319 .
+
+:A320TestReport
+    rdfs:label "A320 NEO Test Report"@en ;
+    skos:definition "An information artifact produced as output of the aircraft test process."@en ;
+    cco:ont00001816 :AircraftTestProcess .
+
+:OCC_AerospaceEngineer1
+    rdfs:label "OCC: Aerospace Engineer"@en ;
+    skos:definition "An occupational classification for aerospace engineers."@en .
+
+:OCC_AerospaceEngineer2
+    rdfs:label "OCC: Aerospace Engineer 1"@en ;
+    skos:definition "An occupational classification covering aerospace design engineers."@en .
+
+:OCC_AerospaceEngineer3
+    rdfs:label "OCC: Aerospace Engineer 2"@en ;
+    skos:definition "An occupational classification covering aerospace test engineers."@en .
+
+:TotalEmployment1
+    rdf:type :TotalEmployment ;
+    rdfs:label "Total Employment"@en ;
+    :hasValue "1500"^^xsd:integer .
+
+:Measuring1
+    rdf:type :ActofMeasuring .

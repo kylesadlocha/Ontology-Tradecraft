@@ -6,9 +6,7 @@ import re
 import pandas as pd
 from rdflib import Graph, URIRef, BNode, Literal
 from rdflib.namespace import RDF, RDFS, OWL, Namespace
-
 SKOS = Namespace("http://www.w3.org/2004/02/skos/core#")
-
 # ---------- RDF list helper ----------
 def iter_rdf_list(g: Graph, head) -> Iterable:
     while head and head != RDF.nil:
@@ -16,7 +14,6 @@ def iter_rdf_list(g: Graph, head) -> Iterable:
         if first is not None:
             yield first
         head = g.value(head, RDF.rest)
-
 # ---------- Labels ----------
 def best_label(g: Graph, n: URIRef) -> str:
     for p in (RDFS.label, SKOS.prefLabel):
@@ -25,13 +22,11 @@ def best_label(g: Graph, n: URIRef) -> str:
             return str(o)
     s = str(n)
     return s.rsplit("#", 1)[-1].rsplit("/", 1)[-1]
-
 def name_qname(g: Graph, n: URIRef) -> str:
     try:
         return g.namespace_manager.qname(n)
     except Exception:
         return str(n)
-
 # ---------- Shape extraction ----------
 def _as_int(n) -> Optional[int]:
     try:
@@ -40,39 +35,33 @@ def _as_int(n) -> Optional[int]:
         return int(str(n))
     except Exception:
         return None
-
 def restriction_shape_token(g: Graph, rnode, granularity: str) -> Optional[str]:
     if (rnode, RDF.type, OWL.Restriction) not in g:
         return None
-
     def emit(key: str, n: Optional[int]) -> str:
         if granularity == "coarse":
             key = key.replace("qmin","min").replace("qmax","max").replace("qcard","card")
         if granularity == "exact" and n is not None:
             return f"R:{key}={n}"
         return f"R:{key}"
-
     for pred, key in ((OWL.qualifiedCardinality, "qcard"),
                       (OWL.minQualifiedCardinality, "qmin"),
                       (OWL.maxQualifiedCardinality, "qmax")):
         n = g.value(rnode, pred); on_cls = g.value(rnode, OWL.onClass)
         if n is not None and on_cls is not None:
             return emit(key, _as_int(n))
-
     for pred, key in ((OWL.cardinality, "card"),
                       (OWL.minCardinality, "min"),
                       (OWL.maxCardinality, "max")):
         n = g.value(rnode, pred)
         if n is not None:
             return emit(key, _as_int(n))
-
     for pred, key in ((OWL.someValuesFrom, "some"),
                       (OWL.allValuesFrom,  "only"),
                       (OWL.hasValue,       "has")):
         if g.value(rnode, pred) is not None:
             return f"R:{key}"
     return None
-
 def collect_shape_tokens(g: Graph, expr, granularity: str) -> Counter:
     C = Counter()
     if isinstance(expr, URIRef):
@@ -93,7 +82,6 @@ def collect_shape_tokens(g: Graph, expr, granularity: str) -> Counter:
             C += collect_shape_tokens(g, m, granularity)
         return C
     return C
-
 def class_shape_signature(g: Graph, cls: URIRef, granularity: str) -> Counter:
     sig = Counter()
     for sup in g.objects(cls, RDFS.subClassOf):
@@ -101,14 +89,12 @@ def class_shape_signature(g: Graph, cls: URIRef, granularity: str) -> Counter:
     for eq in g.objects(cls, OWL.equivalentClass):
         sig += collect_shape_tokens(g, eq, granularity)
     return sig
-
 def classes_with_shape(g: Graph, granularity: str) -> Dict[URIRef, Counter]:
     classes = set()
     classes.update(s for s in g.subjects(RDF.type, OWL.Class))
     classes.update(s for s in g.subjects(RDF.type, RDFS.Class))
     classes.update(s for s, _, _ in g.triples((None, RDFS.subClassOf, None)))
     classes.update(s for s, _, _ in g.triples((None, OWL.equivalentClass, None)))
-
     out: Dict[URIRef, Counter] = {}
     for c in classes:
         if not isinstance(c, URIRef):
@@ -117,17 +103,14 @@ def classes_with_shape(g: Graph, granularity: str) -> Dict[URIRef, Counter]:
         if sig:
             out[c] = sig
     return out
-
 # ---------- Normalization ----------
 NUM_RE = re.compile(r"^R:(?P<k>[a-z]+)(?:=(?P<n>\d+))?$")
-
 def parse_tok(tok: str) -> Tuple[str, Optional[int]]:
     m = NUM_RE.match(tok)
     if not m:
         return tok, None
     k = m.group("k"); n = m.group("n")
     return k, (int(n) if n is not None else None)
-
 def closure_entailment(sig: Counter) -> Counter:
     out = sig.copy()
     def add(t,k=1): out[t] += k
@@ -144,7 +127,6 @@ def closure_entailment(sig: Counter) -> Counter:
         if k in ("min","qmin") and n is not None and n >= 1:
             add("R:some", cnt)
     return out
-
 def normalize_families(sig: Counter) -> Counter:
     fam = Counter()
     for tok, cnt in sig.items():
@@ -162,7 +144,6 @@ def normalize_families(sig: Counter) -> Counter:
         else:
             fam["F:OTHER"] += 1
     return fam
-
 def apply_normalization(sig: Counter, mode: str) -> Counter:
     if mode == "off":
         return sig
@@ -171,7 +152,6 @@ def apply_normalization(sig: Counter, mode: str) -> Counter:
     if mode == "families":
         return normalize_families(sig)
     return sig
-
 # ---------- Rendering (for XLSX) ----------
 def render_expr(g: Graph, expr) -> str:
     if isinstance(expr, URIRef):
@@ -213,7 +193,6 @@ def render_expr(g: Graph, expr) -> str:
     if isinstance(expr, BNode):
         return "(anonymous)"
     return str(expr)
-
 def axioms_for_class(g: Graph, cls: URIRef) -> List[str]:
     out: List[str] = []
     for sup in g.objects(cls, RDFS.subClassOf):
@@ -221,7 +200,6 @@ def axioms_for_class(g: Graph, cls: URIRef) -> List[str]:
     for eq in g.objects(cls, OWL.equivalentClass):
         out.append("EquivalentTo: {}".format(render_expr(g, eq)))
     return out
-
 # ---------- Parsing ----------
 def parse_graph(path: Path, follow_imports: bool, depth: int) -> Graph:
     g = Graph(); g.parse(path.as_posix())
@@ -241,36 +219,27 @@ def parse_graph(path: Path, follow_imports: bool, depth: int) -> Graph:
                     pass
             frontier = nxt; d += 1
     return g
-
 # ---------- Keys & Strings ----------
 def key_for(sig: Counter, presence_only: bool) -> Tuple[Tuple[str,int], ...]:
     return tuple(sorted((k, (1 if presence_only else v)) for k, v in sig.items()))
-
 def shape_str(sig: Counter) -> str:
     return "; ".join(f"{k}×{v}" if v != 1 else k for k, v in sorted(sig.items()))
-
 # ---------- Main ----------
 def run_pair(left: Path, right: Path, outdir: Path,
              follow_imports: bool, depth: int,
              granularity: str, presence_only: bool, normalize_mode: str):
-
     gL = parse_graph(left,  follow_imports, depth)
     gR = parse_graph(right, follow_imports, depth)
-
     rawL = classes_with_shape(gL, granularity)
     rawR = classes_with_shape(gR, granularity)
-
     normL = {c: apply_normalization(sig, normalize_mode) for c, sig in rawL.items()}
     normR = {c: apply_normalization(sig, normalize_mode) for c, sig in rawR.items()}
-
     L_keys = {}
     for c, s in normL.items():
         L_keys.setdefault(key_for(s, presence_only), []).append(c)
-
     invR = {}
     for c, s in normR.items():
         invR.setdefault(key_for(s, presence_only), []).append(c)
-
     rows: List[Dict[str, str]] = []
     for k, left_classes in L_keys.items():
         right_classes = invR.get(k, [])
@@ -288,7 +257,6 @@ def run_pair(left: Path, right: Path, outdir: Path,
                     "right_shape": shape_str(rawR[cR]),
                     "right_axioms": " | ".join(axioms_for_class(gR, cR)),
                 })
-
     out = outdir / (left.stem + "-" + right.stem + "-structural-matches.xlsx")
     pd.DataFrame(rows, columns=[
         "left_iri","left_label","left_shape","left_axioms",
@@ -297,21 +265,74 @@ def run_pair(left: Path, right: Path, outdir: Path,
     print(f"[OK] {out.name}: {len(rows)} pairs")
 
 def main():
-    ap = argparse.ArgumentParser(description="Save ONLY the structural matches across two ontologies.")
-    ap.add_argument("--left",  type=Path, required=True)
+    ap = argparse.ArgumentParser(description="Compare ontology structures or normalized unit labels.")
+    ap.add_argument("--left", type=Path, required=True)
     ap.add_argument("--right", type=Path, required=True)
     ap.add_argument("--outdir", type=Path, default=Path("."))
-
-    ap.add_argument("--shape", choices=["exact","kind","coarse"], default="exact")
-    ap.add_argument("--normalize", choices=["off","families","entailment"], default="off")
+    ap.add_argument("--shape", choices=["exact", "kind", "coarse"], default="exact")
+    ap.add_argument("--normalize", choices=["off", "families", "entailment"], default="off")
     ap.add_argument("--presence-only", action="store_true")
     ap.add_argument("--follow-imports", action="store_true")
     ap.add_argument("--imports-depth", type=int, default=2)
+    ap.add_argument("--unit-labels", action="store_true")
 
     args = ap.parse_args()
+    args.outdir.mkdir(parents=True, exist_ok=True)
+
+    if args.unit_labels:
+        gL = parse_graph(args.left, False, 0)
+        gR = parse_graph(args.right, False, 0)
+
+        def unit_classes(g):
+            classes = set(g.subjects(RDF.type, OWL.Class))
+            classes.update(g.subjects(RDF.type, RDFS.Class))
+            return sorted(c for c in classes if isinstance(c, URIRef))
+
+        def simplify(label):
+            text = re.sub(r"\b(measurement|unit|of)\b", "", label.lower())
+            return " ".join(text.split())
+
+        rows = []
+        for left in unit_classes(gL):
+            left_label = gL.value(left, RDFS.label)
+            if left_label is None:
+                continue
+            left_name = simplify(str(left_label))
+            if not left_name:
+                continue
+
+            for right in unit_classes(gR):
+                right_label = gR.value(right, RDFS.label)
+                if right_label is None:
+                    continue
+                if left_name == simplify(str(right_label)):
+                    rows.append({
+                        "left_iri": str(left),
+                        "left_label": str(left_label),
+                        "left_axioms": " | ".join(axioms_for_class(gL, left)),
+                        "right_iri": str(right),
+                        "right_label": str(right_label),
+                        "right_axioms": " | ".join(axioms_for_class(gR, right)),
+                        "selection_method": "Exact normalized label match",
+                    })
+
+        columns = [
+            "left_iri", "left_label", "left_axioms",
+            "right_iri", "right_label", "right_axioms", "selection_method",
+        ]
+        df = pd.DataFrame(rows, columns=columns)
+        df = df.sort_values(["left_label", "right_label"])
+        output = args.outdir / (
+            f"{args.left.stem}-{args.right.stem}-label-candidates.xlsx"
+        )
+        df.to_excel(output, index=False)
+        print(f"[OK] {output.name}: {len(df)} pairs")
+        return
+
     run_pair(args.left, args.right, args.outdir,
              args.follow_imports, args.imports_depth,
              args.shape, args.presence_only, args.normalize)
+
 
 if __name__ == "__main__":
     main()

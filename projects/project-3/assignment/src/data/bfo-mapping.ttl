@@ -1,0 +1,5 @@
+@prefix ies:  <http://ies.data.gov.uk/ontology/ies4#> .
+@prefix bfo:  <http://purl.obolibrary.org/obo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+ies:EventParticipant rdfs:subClassOf bfo:BFO_0000002 .

@@ -4,3 +4,30 @@
 #    No annotation value may have leading or trailing whitespace.    
 # Severity:
 #    Error 
+
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?element ?property ?value
+WHERE {
+    ?element ?property ?value .
+
+    {
+        VALUES ?property {
+            rdfs:label
+            rdfs:comment
+            skos:definition
+            skos:prefLabel
+            skos:altLabel
+        }
+    }
+    UNION
+    {
+        ?property rdf:type owl:AnnotationProperty .
+    }
+
+    FILTER(isLiteral(?value))
+    FILTER(REGEX(STR(?value), "^\\s|\\s$"))
+}

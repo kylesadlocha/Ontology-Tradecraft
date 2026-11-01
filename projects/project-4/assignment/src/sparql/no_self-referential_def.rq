@@ -4,3 +4,22 @@
 #    No class definition should be self-referential. 
 # Severity:  
 #    Error
+
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?class ?label ?definition
+WHERE {
+    ?class a owl:Class ;
+           rdfs:label ?label ;
+           skos:definition ?definition .
+
+    FILTER(STRLEN(STR(?label)) > 0)
+    FILTER(
+        CONTAINS(
+            LCASE(STR(?definition)),
+            LCASE(STR(?label))
+        )
+    )
+}

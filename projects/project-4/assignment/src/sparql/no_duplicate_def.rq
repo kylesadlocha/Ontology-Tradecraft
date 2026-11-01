@@ -4,3 +4,14 @@
 #    No two ontology elements may have the exact same definition.    
 # Severity:
 #     Error 
+
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?element1 ?element2 ?definition1 ?definition2
+WHERE {
+    ?element1 skos:definition ?definition1 .
+    ?element2 skos:definition ?definition2 .
+
+    FILTER(STR(?element1) < STR(?element2))
+    FILTER(STR(?definition1) = STR(?definition2))
+}

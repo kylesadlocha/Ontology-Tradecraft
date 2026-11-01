@@ -13,15 +13,15 @@
 #
 # A valid ontology should return ZERO rows.
 
+# No two different subjects may share the same label text.
+
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT DISTINCT ?element ?element2 ?label ?error
+SELECT DISTINCT ?element1 ?element2 ?label1 ?label2
 WHERE {
-  ?element rdfs:label ?label .
-  ?element2 rdfs:label ?label .
-  FILTER (?element != ?element2)
-  FILTER (!isBlank(?element))
-  FILTER (!isBlank(?element2))
-  BIND (concat("WARNING: The following ontology elements have the same rdfs:label ", str(?element), " and ", str(?element2)) AS ?error)
+    ?element1 rdfs:label ?label1 .
+    ?element2 rdfs:label ?label2 .
+
+    FILTER(STR(?element1) < STR(?element2))
+    FILTER(STR(?label1) = STR(?label2))
 }
-ORDER BY DESC(UCASE(str(?label)))

@@ -1,0 +1,158 @@
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix cco: <https://www.commoncoreontologies.org/> .
+@prefix ex: <http://example.org/measurements/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/measurements/artifact/Boiler-07> a cco:ont00000995 ;
+    rdfs:label "Boiler-07"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Boiler-07/pressure>,
+        <http://example.org/measurements/sdc/Boiler-07/temperature> .
+
+<http://example.org/measurements/artifact/Chiller%203> a cco:ont00000995 ;
+    rdfs:label "Chiller 3"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Chiller%203/temperature> .
+
+<http://example.org/measurements/artifact/Chiller-3> a cco:ont00000995 ;
+    rdfs:label "Chiller-3"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Chiller-3/temperature> .
+
+<http://example.org/measurements/artifact/Chiller-4> a cco:ont00000995 ;
+    rdfs:label "Chiller-4"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Chiller-4/temperature> .
+
+<http://example.org/measurements/artifact/Circuit-12> a cco:ont00000995 ;
+    rdfs:label "Circuit-12"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Circuit-12/resistance>,
+        <http://example.org/measurements/sdc/Circuit-12/voltage> .
+
+<http://example.org/measurements/artifact/Pump-A1> a cco:ont00000995 ;
+    rdfs:label "Pump-A1"@en ;
+    bfo:BFO_0000196 <http://example.org/measurements/sdc/Pump-A1/pressure> .
+
+<http://example.org/measurements/measurement/1> a cco:ont00001163 ;
+    rdfs:label "Measurement 1"@en ;
+    ex:recordedAt "2024-03-17T19:03:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 212.0 ;
+    cco:ont00001863 <http://example.org/measurements/unit/F> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Boiler-07/temperature> .
+
+<http://example.org/measurements/measurement/10> a cco:ont00001163 ;
+    rdfs:label "Measurement 10"@en ;
+    ex:recordedAt "2024-03-18T12:06:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 1.3 ;
+    cco:ont00001863 <http://example.org/measurements/unit/ohm> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Circuit-12/resistance> .
+
+<http://example.org/measurements/measurement/11> a cco:ont00001163 ;
+    rdfs:label "Measurement 11"@en ;
+    ex:recordedAt "2024-03-18T08:07:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 101.325 ;
+    cco:ont00001863 <http://example.org/measurements/unit/kPa> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Pump-A1/pressure> .
+
+<http://example.org/measurements/measurement/2> a cco:ont00001163 ;
+    rdfs:label "Measurement 2"@en ;
+    ex:recordedAt "2024-03-17T19:04:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 14.7 ;
+    cco:ont00001863 <http://example.org/measurements/unit/psi> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Boiler-07/pressure> .
+
+<http://example.org/measurements/measurement/3> a cco:ont00001163 ;
+    rdfs:label "Measurement 3"@en ;
+    ex:recordedAt "2024-03-17T23:03:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 100.0 ;
+    cco:ont00001863 <http://example.org/measurements/unit/C> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Boiler-07/temperature> .
+
+<http://example.org/measurements/measurement/4> a cco:ont00001163 ;
+    rdfs:label "Measurement 4"@en ;
+    ex:recordedAt "2024-03-17T23:04:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 101.325 ;
+    cco:ont00001863 <http://example.org/measurements/unit/kPa> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Boiler-07/pressure> .
+
+<http://example.org/measurements/measurement/5> a cco:ont00001163 ;
+    rdfs:label "Measurement 5"@en ;
+    ex:recordedAt "2024-03-18T08:01:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 68.0 ;
+    cco:ont00001863 <http://example.org/measurements/unit/F> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Chiller%203/temperature> .
+
+<http://example.org/measurements/measurement/6> a cco:ont00001163 ;
+    rdfs:label "Measurement 6"@en ;
+    ex:recordedAt "2024-03-18T12:01:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 19.5 ;
+    cco:ont00001863 <http://example.org/measurements/unit/C> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Chiller-3/temperature> .
+
+<http://example.org/measurements/measurement/7> a cco:ont00001163 ;
+    rdfs:label "Measurement 7"@en ;
+    ex:recordedAt "2024-03-18T12:01:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 6.5 ;
+    cco:ont00001863 <http://example.org/measurements/unit/F> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Chiller-4/temperature> .
+
+<http://example.org/measurements/measurement/8> a cco:ont00001163 ;
+    rdfs:label "Measurement 8"@en ;
+    ex:recordedAt "2024-03-18T12:06:00+00:00"^^xsd:dateTime ;
+    cco:ont00001769 19.5 ;
+    cco:ont00001863 <http://example.org/measurements/unit/F> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Chiller-4/temperature> .
+
+<http://example.org/measurements/measurement/9> a cco:ont00001163 ;
+    rdfs:label "Measurement 9"@en ;
+    ex:recordedAt "2024-03-18T12:01:01+00:00"^^xsd:dateTime ;
+    cco:ont00001769 2.0 ;
+    cco:ont00001863 <http://example.org/measurements/unit/V> ;
+    cco:ont00001966 <http://example.org/measurements/sdc/Circuit-12/voltage> .
+
+ex:ontology a owl:Ontology ;
+    rdfs:label "Sensor measurement ontology"@en .
+
+ex:recordedAt a owl:AnnotationProperty ;
+    rdfs:label "recorded at"@en .
+
+<http://example.org/measurements/unit/V> a cco:ont00000120 ;
+    rdfs:label "V"@en .
+
+<http://example.org/measurements/unit/ohm> a cco:ont00000120 ;
+    rdfs:label "ohm"@en .
+
+<http://example.org/measurements/unit/psi> a cco:ont00000120 ;
+    rdfs:label "psi"@en .
+
+<http://example.org/measurements/sdc/Chiller%203/temperature> a bfo:BFO_0000020 ;
+    rdfs:label "Chiller 3 temperature"@en .
+
+<http://example.org/measurements/sdc/Chiller-3/temperature> a bfo:BFO_0000020 ;
+    rdfs:label "Chiller-3 temperature"@en .
+
+<http://example.org/measurements/sdc/Circuit-12/resistance> a bfo:BFO_0000020 ;
+    rdfs:label "Circuit-12 resistance"@en .
+
+<http://example.org/measurements/sdc/Circuit-12/voltage> a bfo:BFO_0000020 ;
+    rdfs:label "Circuit-12 voltage"@en .
+
+<http://example.org/measurements/sdc/Pump-A1/pressure> a bfo:BFO_0000020 ;
+    rdfs:label "Pump-A1 pressure"@en .
+
+<http://example.org/measurements/unit/C> a cco:ont00000120 ;
+    rdfs:label "C"@en .
+
+<http://example.org/measurements/unit/kPa> a cco:ont00000120 ;
+    rdfs:label "kPa"@en .
+
+<http://example.org/measurements/sdc/Boiler-07/pressure> a bfo:BFO_0000020 ;
+    rdfs:label "Boiler-07 pressure"@en .
+
+<http://example.org/measurements/sdc/Boiler-07/temperature> a bfo:BFO_0000020 ;
+    rdfs:label "Boiler-07 temperature"@en .
+
+<http://example.org/measurements/sdc/Chiller-4/temperature> a bfo:BFO_0000020 ;
+    rdfs:label "Chiller-4 temperature"@en .
+
+<http://example.org/measurements/unit/F> a cco:ont00000120 ;
+    rdfs:label "F"@en .
+

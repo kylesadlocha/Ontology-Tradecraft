@@ -190,25 +190,25 @@ def normalize_and_clean(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main():
-    print("[paths] A:", IN_A)
-    print("[paths] B:", IN_B)
-    print("[paths] C:", IN_C)
     df_a = load_sensor_a(IN_A)
     df_b = load_sensor_b(IN_B)
-    df_c = load_sensor_a(IN_C)
 
-    print(f"[normalize_readings] Input A rows: {len(df_a)}")
-    print(f"[normalize_readings] Input B rows: {len(df_b)}")
-    print(f"[normalize_readings] Input C rows: {len(df_c)}")
+    frames = [df_a, df_b]
 
-    combined = pd.concat([df_a, df_b, df_c], ignore_index=True)
+    # Include Sensor C once it has been moved into src/data.
+    if IN_C.exists():
+        df_c = load_sensor_a(IN_C)
+        frames.append(df_c)
+
+    combined = pd.concat(frames, ignore_index=True)
     cleaned = normalize_and_clean(combined)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     cleaned.to_csv(OUT, index=False)
 
-    print(f"[normalize_readings] Output rows : {len(cleaned)}")
-    print(f"[normalize_readings] Wrote       : {OUT}")
+    print(f"Input rows: {len(combined)}")
+    print(f"Output rows: {len(cleaned)}")
+    print(f"Wrote: {OUT}")
 
 
 if __name__ == "__main__":

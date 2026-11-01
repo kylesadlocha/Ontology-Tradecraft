@@ -5,3 +5,17 @@
 # Severity:
 #     Warning
 
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT DISTINCT ?element
+WHERE {
+    VALUES ?type { owl:Class owl:ObjectProperty }
+    ?element a ?type .
+
+    FILTER NOT EXISTS {
+        ?element skos:definition ?definition .
+        FILTER(LANGMATCHES(LANG(?definition), "en"))
+        FILTER(STRLEN(REPLACE(STR(?definition), "\\s", "")) > 0)
+    }
+}

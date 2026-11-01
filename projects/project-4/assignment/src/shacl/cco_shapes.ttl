@@ -9,42 +9,198 @@
 #################################################################
 # 1) Artifact bears at least one SDC (cardinality); 
 #################################################################
+
 ex:ArtifactHasSDCShape
-  a sh:NodeShape ;
-  sh:targetClass cco:Artifact ;
-  sh:property [
-    sh:path bfo:bearer_of ;
-    sh:minCount 1 ;
-    sh:class bfo:SpecificallyDependentContinuant ;
-    sh:message "Every Artifact must bear at least one SDC (Specifically Dependent Continuant)." ;
-    sh:severity sh:Violation
-  ] .
+    a sh:NodeShape ;
+    sh:targetClass cco:ont00000995 ;
+    sh:property [
+        sh:path bfo:BFO_0000196 ;
+        sh:minCount 1 ;
+        sh:class bfo:BFO_0000020 ;
+        sh:message "Every artifact must bear at least one specifically dependent continuant."
+    ] .
 
 #################################################################
 # 2) SDC is measured by at least one MICE (coverage via inverse) 
 #################################################################
 
+ex:SDCHasMeasurementShape
+    a sh:NodeShape ;
+    sh:targetClass bfo:BFO_0000020 ;
+    sh:property [
+        sh:path [
+            sh:inversePath cco:ont00001966
+        ] ;
+        sh:minCount 1 ;
+        sh:class cco:ont00001163 ;
+        sh:message "Every SDC must be measured by at least one measurement information content entity."
+    ] .
+
 #################################################################
 # 3) MICE measures exactly one SDC (functional)
 #################################################################
+
+# 3. Every MICE measures exactly one SDC.
+ex:MeasurementHasOneSDCShape
+    a sh:NodeShape ;
+    sh:targetClass cco:ont00001163 ;
+    sh:property [
+        sh:path cco:ont00001966 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class bfo:BFO_0000020 ;
+        sh:message "Every measurement must measure exactly one specifically dependent continuant."
+    ] .
 
 #################################################################
 # 4) MICE must have one unit and one numeric value (completeness)
 #################################################################
 
+ex:MeasurementUnitAndValueShape
+    a sh:NodeShape ;
+    sh:targetClass cco:ont00001163 ;
+    sh:property [
+        sh:path cco:ont00001863 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class cco:ont00000120 ;
+        sh:message "Every measurement must use exactly one measurement unit."
+    ] ;
+    sh:property [
+        sh:path cco:ont00001769 ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:decimal ;
+        sh:message "Every measurement must have exactly one decimal value."
+    ] .
+
 #################################################################
 # 5) No empty values in literals
 #################################################################
+
+ex:NoEmptyLiteralsShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf rdf:type ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Literal values must not be empty or contain only whitespace." ;
+        sh:select """
+            SELECT $this ?path ?value
+            WHERE {
+                $this ?path ?value .
+                FILTER(isLiteral(?value))
+                FILTER(
+                    STRLEN(
+                        REPLACE(STR(?value), "\\\\s", "")
+                    ) = 0
+                )
+            }
+        """
+    ] .
 
 #################################################################
 # 6) Unit must match SDC being measured
 #################################################################
 
+ex:UnitMatchesSDCShape
+    a sh:NodeShape ;
+    sh:targetClass cco:ont00001163 ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "The measurement unit does not match the measured quality." ;
+        sh:select """
+            PREFIX cco:  <https://www.commoncoreontologies.org/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+            SELECT DISTINCT $this
+            WHERE {
+                $this cco:ont00001966 ?sdc ;
+                      cco:ont00001863 ?unit .
+
+                FILTER NOT EXISTS {
+                    ?sdc rdfs:label ?sdcLabel .
+                    ?unit rdfs:label ?unitLabel .
+
+                    VALUES (?kind ?allowedUnit) {
+                        ("temperature" "C")
+                        ("temperature" "F")
+                        ("pressure" "psi")
+                        ("pressure" "kPa")
+                        ("voltage" "V")
+                        ("resistance" "ohm")
+                    }
+
+                    FILTER(
+                        ENDSWITH(
+                            LCASE(STR(?sdcLabel)),
+                            CONCAT(" ", ?kind)
+                        )
+                    )
+                    FILTER(STR(?unitLabel) = ?allowedUnit)
+                }
+            }
+        """
+    ] .
+
 #################################################################
 # 7) No duplicate MICE
 #################################################################
+
+ex:NoDuplicateMeasurementsShape
+    a sh:NodeShape ;
+    sh:targetClass cco:ont00001163 ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Another measurement has the same SDC, unit, value, and timestamp." ;
+        sh:select """
+            PREFIX cco: <https://www.commoncoreontologies.org/>
+            PREFIX data: <http://example.org/measurements/>
+
+            SELECT DISTINCT $this ?other
+            WHERE {
+                $this cco:ont00001966 ?sdc ;
+                      cco:ont00001863 ?unit ;
+                      cco:ont00001769 ?value ;
+                      data:recordedAt ?time .
+
+                ?other a cco:ont00001163 ;
+                       cco:ont00001966 ?sdc ;
+                       cco:ont00001863 ?unit ;
+                       cco:ont00001769 ?value ;
+                       data:recordedAt ?time .
+
+                FILTER($this != ?other)
+            }
+        """
+    ] .
 
 #################################################################
 # 8) No dangling/mistyped nodes 
 #################################################################
 
+ex:BearerEndpointsShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf bfo:BFO_0000196 ;
+    sh:class cco:ont00000995 ;
+    sh:property [
+        sh:path bfo:BFO_0000196 ;
+        sh:nodeKind sh:IRI ;
+        sh:class bfo:BFO_0000020
+    ] .
+
+ex:MeasurementEndpointsShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf cco:ont00001966 ;
+    sh:targetSubjectsOf cco:ont00001863 ;
+    sh:targetSubjectsOf cco:ont00001769 ;
+    sh:class cco:ont00001163 ;
+    sh:property [
+        sh:path cco:ont00001966 ;
+        sh:nodeKind sh:IRI ;
+        sh:class bfo:BFO_0000020
+    ] ;
+    sh:property [
+        sh:path cco:ont00001863 ;
+        sh:nodeKind sh:IRI ;
+        sh:class cco:ont00000120
+    ] .

@@ -124,7 +124,7 @@ ex:UnitMatchesSDCShape
                     VALUES (?kind ?allowedUnit) {
                         ("temperature" "C")
                         ("temperature" "F")
-                        ("pressure" "psi")
+                        ("pressure" "Pa")
                         ("pressure" "kPa")
                         ("voltage" "V")
                         ("resistance" "ohm")

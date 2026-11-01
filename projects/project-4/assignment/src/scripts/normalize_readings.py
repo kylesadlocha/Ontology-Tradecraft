@@ -166,6 +166,20 @@ def normalize_and_clean(df: pd.DataFrame) -> pd.DataFrame:
     df["value"] = df["value"].apply(_to_float)
     df["timestamp"] = df["timestamp"].apply(_to_iso_utc)
 
+    # Convert pressure readings and unit labels to pascals.
+    psi_rows = (
+        (df["sdc_kind"] == "pressure")
+        & (df["unit_label"] == "psi")
+    )
+    kpa_rows = (
+        (df["sdc_kind"] == "pressure")
+        & (df["unit_label"] == "kPa")
+    )
+
+    df.loc[psi_rows, "value"] *= 6894.757293168
+    df.loc[kpa_rows, "value"] *= 1000
+    df.loc[psi_rows | kpa_rows, "unit_label"] = "Pa"
+
     # Diagnostics
     total = len(df)
     missing_counts = {
